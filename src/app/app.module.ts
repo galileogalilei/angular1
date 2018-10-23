@@ -7,7 +7,8 @@ import {
     MatButtonModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatGridListModule,
 } from '@angular/material';
 
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -36,7 +37,8 @@ import {MenuItemComponent} from './templates/menu-item/menu-item.component';
         MatToolbarModule,
         MatFormFieldModule,
         MatInputModule,
-        FlexLayoutModule
+        FlexLayoutModule,
+        MatGridListModule
     ],
     providers: [],
     bootstrap: [AppComponent]
