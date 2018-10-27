@@ -9,6 +9,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatGridListModule,
+    MatListModule,
 } from '@angular/material';
 
 import {FlexLayoutModule} from '@angular/flex-layout';
@@ -38,6 +39,7 @@ import {MenuItemComponent} from './templates/menu-item/menu-item.component';
         MatFormFieldModule,
         MatInputModule,
         FlexLayoutModule,
+        MatListModule,
         MatGridListModule
     ],
     providers: [],

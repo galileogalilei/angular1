@@ -1,2 +1,48 @@
-.tst {
+.container_cls {
+    background-image: url("/assets/images/calculations5.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.subcontainer_cls {
+    background-color: #d4d6d6a3;
+}
+
+.title_cls {
+    background: #c4c3cae0;
+    border-radius: 10px;
+    color: red;
+}
+
+.expr_cls {
+    font-family: Roboto-Regular, helvetica, arial, sans-serif;
+    font-weight: lighter;
+    white-space: nowrap;
+    color: #222;
+    font-size: 30px;
+}
+
+.operands_cls {
+}
+
+button:active .operands_cls {
+    font-size: 30px;
+    color: white;
+}
+
+.expr_container_active {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .3);
+    border: 1px solid #4d90fe;
+    border-radius: 1.1px;
+}
+
+.expr_container_icon_active {
+    color: red;
+}
+
+.calc_history_log {
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Calibri;
 }
