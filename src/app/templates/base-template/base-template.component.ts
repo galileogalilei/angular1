@@ -56,6 +56,7 @@ export class BaseTemplateComponent implements OnInit {
 
     @HostListener('document:keyup', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
+        // console.log(event.keyCode);
         this._handleKeySelected(event.keyCode);
     }
 
