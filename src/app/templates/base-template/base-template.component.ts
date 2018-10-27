@@ -104,6 +104,7 @@ export class BaseTemplateComponent implements OnInit {
     }
 
     private _handleKeySelected(enteredCode) {
+        // console.log(this.tockenStack);
         switch (enteredCode) {
             case 32: // SPACE key
                 this._evaluatebufferInputList();
@@ -124,9 +125,15 @@ export class BaseTemplateComponent implements OnInit {
             case 13: // Result key
                 this._evaluatebufferInputList();
                 this.bufferInputList = [];
+                if (this.tockenStack.length < 1) {
+                    return false;
+                }
                 this._recalculateExprForDisplay(this.tockenStack);
-                const inputExpr = this._recalculateExprForProcess(this.tockenStack);
+                const inputExpr = this._recalculateExprForProcess(this.tockenStack).trim();
                 this.resetStack();
+                if (!inputExpr || inputExpr.length < 1) {
+                    return false;
+                }
                 const result = 69; // here call to back-end using inputExpr!!
                 this.inputExpressionsList.push(inputExpr);
                 this.resultsList.push(result);
