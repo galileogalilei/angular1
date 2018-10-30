@@ -1,5 +1,6 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 interface Btns {
     keyCode: number;
@@ -15,6 +16,7 @@ interface Btns {
     styleUrls: ['./base-template.component.css']
 })
 export class BaseTemplateComponent implements OnInit {
+    serviceUrl = 'http://localhost:8080/rpn';
 
     public buttons: Btns[] = [
         {keyCode: 666666, val: 'CLEAR', colspan: 2, icn: 'clear', type: 3},
@@ -27,7 +29,7 @@ export class BaseTemplateComponent implements OnInit {
         {keyCode: 777378, val: 'MIN', colspan: 1, icn: null, type: 2},
         {keyCode: 5416, val: 'x^y', colspan: 1, icn: null, type: 2},
         {keyCode: 189, val: '-', colspan: 1, icn: null, type: 2},
-        {keyCode: 56, val: '*', colspan: 1, icn: null, type: 2},
+        {keyCode: 5616, val: '*', colspan: 1, icn: null, type: 2},
         {keyCode: 49, val: '1', colspan: 1, icn: null, type: 1},
         {keyCode: 50, val: '2', colspan: 1, icn: null, type: 1},
         {keyCode: 51, val: '3', colspan: 1, icn: null, type: 1},
@@ -48,7 +50,7 @@ export class BaseTemplateComponent implements OnInit {
 
     inputExpressionsList: string[] = [];
 
-    resultsList: number[] = [];
+    resultsList: string[] = [];
 
     inputExpression = '';
 
@@ -60,7 +62,7 @@ export class BaseTemplateComponent implements OnInit {
         this._handleKeySelected(event.keyCode);
     }
 
-    constructor() {
+    constructor(private http: HttpClient) {
     }
 
     ngOnInit() {
@@ -104,9 +106,27 @@ export class BaseTemplateComponent implements OnInit {
         return this.tockenStack;
     }
 
+    evaluateExpr(expr) {
+        this._getResult(expr).subscribe((result: string) => {
+            console.log(result);
+            this.resultsList.push(result);
+        });
+    }
+
     private _handleKeySelected(enteredCode) {
-        // console.log(this.tockenStack);
         switch (enteredCode) {
+            case 16: // if shift key was pressed!
+                const lastToken = this.tockenStack.pop();
+                if ([53, 54, 56].indexOf(lastToken.keyCode) > -1) {
+                    const composeKey = lastToken.keyCode + '' + 16;
+                    const bufferOperator: Btns = this.buttons.find(tocken => {
+                        return (tocken.type === 2 && tocken.keyCode === parseInt(composeKey, 10));
+                    });
+                    this.addToStack(bufferOperator);
+                } else {
+                    this.tockenStack.push(lastToken);
+                }
+                break;
             case 32: // SPACE key
                 this._evaluatebufferInputList();
                 // add space key
@@ -135,9 +155,8 @@ export class BaseTemplateComponent implements OnInit {
                 if (!inputExpr || inputExpr.length < 1) {
                     return false;
                 }
-                const result = 69; // here call to back-end using inputExpr!!
+                this.evaluateExpr(inputExpr);
                 this.inputExpressionsList.push(inputExpr);
-                this.resultsList.push(result);
                 break;
             default:
                 const pressedBtn: Btns = this.buttons.find(row => {
@@ -196,11 +215,19 @@ export class BaseTemplateComponent implements OnInit {
                 if (token.keyCode === 5416) {
                     return expr + '^';
                 }
+                if (token.keyCode === 5316) {
+                    return expr + '/';
+                }
                 return expr + clickedVal;
             }, '');
         }
         this.inputExpression = res;
         return this.inputExpression;
+    }
+
+    private _getResult(expr: string) {
+        // const options = expr.trim() ? {params: new HttpParams().set('expr', encodeURIComponent(expr.trim()))} : {};
+        return this.http.get(this.serviceUrl + '?expr=' + encodeURIComponent(expr));
     }
 
 }

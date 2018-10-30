@@ -1,5 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
 import {
     MatCardModule,
     MatIconModule,
@@ -29,6 +30,7 @@ import {MenuItemComponent} from './templates/menu-item/menu-item.component';
     ],
     imports: [
         BrowserModule,
+        HttpClientModule,
         BrowserAnimationsModule,
         FormsModule,
         MatButtonModule,
