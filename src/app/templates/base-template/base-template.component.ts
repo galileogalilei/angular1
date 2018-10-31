@@ -16,7 +16,7 @@ interface Btns {
     styleUrls: ['./base-template.component.css']
 })
 export class BaseTemplateComponent implements OnInit {
-    serviceUrl = 'http://localhost:8080/rpn';
+    serviceUrl = 'http://142.93.96.224:8080/rpn';
 
     public buttons: Btns[] = [
         {keyCode: 666666, val: 'CLEAR', colspan: 2, icn: 'clear', type: 3},
