@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>{{data.error.name}}</h1>
+<div mat-dialog-content>
+  <p>Evaluated Expression: {{data.expr}}</p>
+  <p>{{data.error.message}}</p>
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button (click)="onCloseClick()">Close</button>
+</div>

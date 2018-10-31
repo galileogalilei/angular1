@@ -1,6 +1,7 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
+import {Component, HostListener, OnInit, ViewChildren} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
+import {MatDialog} from '@angular/material';
+import {ApiErrDialogComponent} from '../api-err-dialog/api-err-dialog.component';
 
 interface Btns {
     keyCode: number;
@@ -56,13 +57,16 @@ export class BaseTemplateComponent implements OnInit {
 
     keyPressed = false;
 
-    @HostListener('document:keyup', ['$event'])
+    isLoading = false;
+
+    @ViewChildren('keyboardInput') vc;
+
+    @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        // console.log(event.keyCode);
         this._handleKeySelected(event.keyCode);
     }
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private errDialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -107,10 +111,22 @@ export class BaseTemplateComponent implements OnInit {
     }
 
     evaluateExpr(expr) {
+        this.isLoading = true;
         this._getResult(expr).subscribe((result: string) => {
-            console.log(result);
-            this.resultsList.push(result);
-        });
+                const res = parseFloat(result).toPrecision(3);
+                this.resultsList.push(res);
+                this.isLoading = false;
+            },
+            error => {
+                this.isLoading = false;
+                this.resultsList.push(NaN.toString());
+                this._openDialog(expr, error);
+            });
+    }
+
+    onShowKeyboard($event) {
+        // console.log(this.vc.first.nativeElement);
+        this.vc.first.nativeElement.focus();
     }
 
     private _handleKeySelected(enteredCode) {
@@ -226,8 +242,18 @@ export class BaseTemplateComponent implements OnInit {
     }
 
     private _getResult(expr: string) {
-        // const options = expr.trim() ? {params: new HttpParams().set('expr', encodeURIComponent(expr.trim()))} : {};
-        return this.http.get(this.serviceUrl + '?expr=' + encodeURIComponent(expr));
+        return this.http.get(this.serviceUrl + '/' + encodeURI(expr));
+    }
+
+    private _openDialog(expr: string, errMsg: string): void {
+        const dialogRef = this.errDialog.open(ApiErrDialogComponent, {
+            width: '350px',
+            data: {expr: expr, error: errMsg}
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            // console.log('The dialog was closed');
+        });
     }
 
 }

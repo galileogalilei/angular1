@@ -11,9 +11,12 @@
             </div>
             <div fxFlex="4 1 auto"></div>
         </div>
+        <input type="text" #keyboardInput fxHide fxShow.xs="true"
+               style="visibility: visible; height: 0px; margin: 0px; padding: 0px; position: absolute; right: 0; top: 0;">
         <div fxFlex="2 1 0" [ngStyle]="{'border' : '0px solid blue'}" fxLayout="row" fxLayoutAlign="center end">
-            <div fxFlex="3 1 0"></div>
-            <div fxFlex="3 1 0" fxLayout="row" [class]="(keyPressed)? 'expr_container_active' : ''"
+            <div fxFlex="3 1 0" fxShow fxHide.xs="true"></div>
+            <div (click)="onShowKeyboard($event)" fxFlex="3 1 0" fxLayout="row"
+                 [class]="(keyPressed)? 'expr_container_active' : ''"
                  fxLayoutAlign="center stretch"
                  [class.mat-elevation-z18]="true">
                 <mat-card fxFlex>
@@ -28,11 +31,12 @@
                     </mat-card-content>
                 </mat-card>
             </div>
-            <div fxFlex="3 1 0"></div>
+            <div fxFlex="3 1 0" fxShow fxHide.xs="true"></div>
         </div>
         <div fxFlex="6 1 0" [ngStyle]="{'border' : '0px solid green'}" fxLayout="row" fxLayoutAlign="center stretch">
-            <div fxFlex="3 1 0" fxLayout="column" fxLayoutAlign="start center" class="calc_history_log">
-                <span>Input Expressions: </span>
+            <div fxFlex="3 1 0" fxFlex.xs="1 1 0" fxLayout="column" fxLayoutAlign="start center"
+                 class="calc_history_log">
+                <span fxShow fxHide.xs="true">Input Expressions: </span>
                 <mat-list>
                     <mat-list-item role="listitem" *ngFor="let expr of inputExpressionsList">{{expr}}</mat-list-item>
                 </mat-list>
@@ -53,11 +57,15 @@
                     </mat-grid-tile>
                 </mat-grid-list>
             </div>
-            <div fxFlex="3 1 0" fxLayout="column" fxLayoutAlign="start center" class="calc_history_log">
-                <span>Results: </span>
+            <div fxFlex="3 1 0" fxFlex.xs="1 1 0" fxLayout="column" fxLayoutAlign="start center"
+                 class="calc_history_log">
+                <span fxShow fxHide.xs="true">Results: </span>
                 <mat-list>
                     <mat-list-item role="listitem" *ngFor="let res of resultsList">{{res}}</mat-list-item>
                 </mat-list>
+                <div fxFlexFill="" *ngIf="isLoading">
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </div>
             </div>
         </div>
     </div>
